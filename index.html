@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOLDFRAME</title>
+    <link rel="icon" href="assets/images/favicon-transparent.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0c;
+            --bg-alt: #131316;
+            --bg-card: #17171b;
+            --text: #ede9e2;
+            --muted: #8b877e;
+            --line: #26262b;
+            --orange: #e0a63a;
+            --teal: #2f7d6b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        ::selection {
+            background: var(--orange);
+            color: #0a0a0c;
+        }
+
+        /* focus visibility */
+        a:focus-visible,
+        button:focus-visible {
+            outline: 2px solid var(--orange);
+            outline-offset: 3px;
+        }
+
+        .wrap {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        /* film perforation edge, purely decorative, subject-appropriate */
+        .sprockets {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            width: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .sprockets.left {
+            left: 0;
+        }
+
+        .sprockets.right {
+            right: 0;
+        }
+
+        .sprockets span {
+            width: 7px;
+            height: 11px;
+            background: var(--line);
+            border-radius: 2px;
+        }
+
+        @media (max-width:760px) {
+            .sprockets {
+                display: none;
+            }
+        }
+
+        /* ---------- NAV ---------- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            padding: 22px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to bottom, rgba(10, 10, 12, 0.9), rgba(10, 10, 12, 0));
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Anton', sans-serif;
+            font-size: 20px;
+            letter-spacing: 0.02em;
+        }
+
+        .logo img {
+            width: 26px;
+            height: 19px;
+            object-fit: contain;
+            object-position: center;
+            border-radius: 3px;
+            display: block;
+        }
+
+        .logo-name {
+            color: var(--text);
+        }
+
+        .logo-name span {
+            color: var(--orange);
+        }
+
+        nav {
+            display: flex;
+            gap: 28px;
+        }
+
+        nav a {
+            font-size: 13px;
+            color: var(--muted);
+            font-family: 'JetBrains Mono', monospace;
+            transition: color .2s ease;
+        }
+
+        nav a:hover {
+            color: var(--text);
+        }
+
+        @media (max-width:640px) {
+            nav {
+                display: none;
+            }
+        }
+
+        /* ---------- HERO ---------- */
+        .hero {
+            min-height: 100svh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            padding: 120px 32px 80px;
+        }
+
+        .tc-row {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--muted);
+            display: flex;
+            gap: 24px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+
+        .tc-row .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--orange);
+            display: inline-block;
+            margin-right: 8px;
+            animation: pulse 1.8s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .25;
+            }
+        }
+
+        @media (prefers-reduced-motion:reduce) {
+            .tc-row .dot {
+                animation: none;
+            }
+        }
+
+        .hero h1 {
+            font-family: 'Anton', sans-serif;
+            font-weight: 400;
+            font-size: clamp(52px, 11vw, 148px);
+            line-height: 0.86;
+            letter-spacing: -0.01em;
+            max-width: 1000px;
+        }
+
+        .hero-sub {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 40px;
+            margin-top: 44px;
+            max-width: 1120px;
+            flex-wrap: wrap;
+        }
+
+        .hero-sub p {
+            max-width: 420px;
+            color: var(--muted);
+            font-size: 16px;
+        }
+
+        .scrub {
+            position: relative;
+            height: 2px;
+            background: var(--line);
+            margin-top: 56px;
+            max-width: 1120px;
+            overflow: hidden;
+        }
+
+        .scrub::after {
+            content: '';
+            position: absolute;
+            left: -30%;
+            top: 0;
+            bottom: 0;
+            width: 30%;
+            background: linear-gradient(90deg, transparent, var(--orange), transparent);
+            animation: scrub 3.2s ease-in-out 0.4s 1 both;
+        }
+
+        @keyframes scrub {
+            0% {
+                left: -30%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        @media (prefers-reduced-motion:reduce) {
+            .scrub::after {
+                animation: none;
+                left: 0;
+                width: 100%;
+                opacity: .5;
+            }
+        }
+
+        /* ---------- SECTION LABELS ---------- */
+        .section {
+            padding: 110px 0;
+            border-top: 1px solid var(--line);
+        }
+
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 56px;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .section-head h2 {
+            font-family: 'Anton', sans-serif;
+            font-weight: 400;
+            font-size: clamp(32px, 4.5vw, 52px);
+        }
+
+        .section-head .tc {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        /* ---------- WORK GALLERY (9:16 cards, short-form) ---------- */
+        .gallery {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            scroll-snap-type: x mandatory;
+        }
+
+        .gallery::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .gallery::-webkit-scrollbar-thumb {
+            background: var(--line);
+            border-radius: 3px;
+        }
+
+        .clip {
+            flex: 0 0 auto;
+            width: 400px;
+            scroll-snap-align: start;
+        }
+
+        .clip-frame {
+            aspect-ratio: 16/9;
+            background: #08080a;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            isolation: isolate;
+            transition: border-color .25s ease, transform .25s ease;
+        }
+
+        .clip-frame::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 1px solid transparent;
+            border-radius: inherit;
+            pointer-events: none;
+            z-index: 2;
+            transition: border-color .25s ease;
+        }
+
+        .clip-frame video {
+            position: absolute;
+            inset: 1px;
+            display: block;
+            width: calc(100% - 2px);
+            height: calc(100% - 2px);
+            border-radius: 5px;
+            object-position: center;
+        }
+
+        .clip-frame iframe {
+            position: absolute;
+            inset: 1px;
+            width: calc(100% - 2px);
+            height: calc(100% - 2px);
+            border: 0;
+            border-radius: 5px;
+        }
+
+        .clip-media-bg {
+            object-fit: cover;
+            filter: blur(16px) brightness(.35);
+            opacity: .7;
+            transform: scale(1.12);
+            pointer-events: none;
+        }
+
+        .clip-media-main {
+            object-fit: contain;
+            transition: transform .25s ease, filter .25s ease;
+            z-index: 1;
+        }
+
+        .clip:hover .clip-media-main {
+            filter: brightness(1.05);
+            transform: scale(1.025);
+        }
+
+        .clip:hover .clip-frame {
+            border-color: var(--orange);
+        }
+
+        .clip:hover .clip-frame::after {
+            border-color: var(--orange);
+        }
+
+        .clip-frame .dur {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--muted);
+            background: rgba(10, 10, 12, 0.7);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        .play {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 1px solid rgba(237, 233, 226, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 44%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .play::after {
+            content: '';
+            border-style: solid;
+            border-width: 6px 0 6px 10px;
+            border-color: transparent transparent transparent var(--text);
+            margin-left: 2px;
+        }
+
+        .clip-meta {
+            margin-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .clip-meta h3 {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .clip-meta span {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .clip-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--orange);
+            text-transform: lowercase;
+            margin-top: 4px;
+            display: block;
+        }
+
+        /* ---------- ABOUT ---------- */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 64px;
+        }
+
+        @media (max-width:800px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+
+        #about {
+            padding-bottom: 8px;
+        }
+
+        .about-grid p {
+            font-size: 16px;
+            color: #c9c5bc;
+            max-width: 50ch;
+            margin-bottom: 14px;
+        }
+
+        .about-lead {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: clamp(22px, 2.6vw, 27px);
+            line-height: 1.3;
+            color: var(--text);
+            max-width: 42ch;
+            margin-bottom: 20px;
+        }
+
+        .about-close {
+            color: var(--orange);
+            font-weight: 500;
+            margin-top: 4px;
+            margin-bottom: 0;
+        }
+
+        .approach-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .approach-row {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            border-bottom: 1px solid var(--line);
+            padding-bottom: 15px;
+        }
+
+        .approach-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .approach-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--orange);
+        }
+
+        .approach-value {
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        /* ---------- TOOLS ---------- */
+        .tools {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .tool {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            padding: 9px 16px;
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            color: var(--muted);
+        }
+
+        /* ---------- CONTACT ---------- */
+        .contact {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 56px;
+        }
+
+        .contact h2 {
+            font-family: 'Anton', sans-serif;
+            font-weight: 400;
+            font-size: clamp(44px, 7vw, 88px);
+            max-width: 680px;
+            line-height: 0.9;
+            letter-spacing: 0.01em;
+        }
+
+        .contact-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .contact-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            letter-spacing: 0.08em;
+            color: var(--orange);
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            font-family: 'JetBrains Mono', monospace;
+            text-align: center;
+            color: var(--text);
+        }
+
+        .contact-link:hover {
+            color: var(--text);
+        }
+
+        .contact-link:hover .contact-icon,
+        .contact-link:hover strong,
+        .contact-link:hover .contact-arrow {
+            animation: contactBounce .45s ease;
+        }
+
+        .contact-link:hover strong {
+            animation-delay: .1s;
+        }
+
+        .contact-link:hover .contact-arrow {
+            animation-delay: .2s;
+        }
+
+        @keyframes contactBounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            35% {
+                transform: translateY(-7px);
+            }
+
+            60% {
+                transform: translateY(0);
+            }
+
+            80% {
+                transform: translateY(-3px);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .contact-link:hover .contact-icon,
+            .contact-link:hover strong,
+            .contact-link:hover .contact-arrow {
+                animation: none;
+            }
+        }
+
+        .contact-icon {
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .contact-link strong {
+            font-size: 15px;
+            letter-spacing: 0.04em;
+        }
+
+        .contact-arrow {
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        footer {
+            padding: 32px;
+            border-top: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--muted);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sprockets left" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div class="sprockets right" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <header>
+        <div class="logo">
+            <img src="assets/images/favicon-transparent.png" alt="" aria-hidden="true">
+            <span class="logo-name">GOLD<span>FRAME</span></span>
+        </div>
+        <nav>
+            <a href="#work">Work</a>
+            <a href="#about">About</a>
+            <a href="#tools">Tools</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <section class="hero">
+            <div class="wrap">
+                <div class="tc-row">
+                    <span><span class="dot"></span>REC 00:00:00:00</span>
+                    <span>SHORT-FORM EDITOR</span>
+                    <span>BASED — REMOTE WORLDWIDE</span>
+                </div>
+                <h1>I CUT FOR<br>THE SCROLL.</h1>
+                <div class="hero-sub">
+                    <p>I edit fast, punchy short-form video for creators and brands: hooks that hold in the first
+                        second, pacing built for retention, sound design that hits on the beat.</p>
+                </div>
+                <div class="scrub" aria-hidden="true"></div>
+            </div>
+        </section>
+
+        <section class="section" id="work">
+            <div class="wrap">
+                <div class="section-head">
+                    <h2>Selected Work</h2>
+                    <span class="tc mono">04 CLIPS — SCROLL &rarr;</span>
+                </div>
+                <div class="gallery">
+
+                    <div class="clip">
+                        <div class="clip-frame">
+                            <iframe src="https://www.youtube.com/embed/w_0jfPQayqc?rel=0&modestbranding=1"
+                                title="Tech Advert"></iframe>
+                        </div>
+                        <div class="clip-meta">
+                            <h3>Tech Advert</h3><span class="mono">VIDEO</span>
+                        </div>
+                        <span class="clip-tag">advert / brand</span>
+                    </div>
+
+                    <div class="clip">
+                        <div class="clip-frame">
+                            <iframe src="https://www.youtube.com/embed/Sq_K7KptOOU?rel=0&modestbranding=1"
+                                title="Like an Avalanche"></iframe>
+                        </div>
+                        <div class="clip-meta">
+                            <h3>Like an Avalanche</h3><span class="mono">VIDEO</span>
+                        </div>
+                        <span class="clip-tag">lyric video / music</span>
+                    </div>
+
+                    <div class="clip">
+                        <div class="clip-frame">
+                            <iframe src="https://www.youtube.com/embed/JIqtLI6lsUE?rel=0&modestbranding=1"
+                                title="Everything Family"></iframe>
+                        </div>
+                        <div class="clip-meta">
+                            <h3>Family Series </h3><span class="mono">EP. 9</span>
+                        </div>
+                        <span class="clip-tag">series / family</span>
+                    </div>
+
+                    <div class="clip">
+                        <div class="clip-frame">
+                            <iframe src="https://www.youtube.com/embed/C5UE1TO8pAA?rel=0&modestbranding=1"
+                                title="Learning Skills Young"></iframe>
+                        </div>
+                        <div class="clip-meta">
+                            <h3>Family Series</h3><span class="mono">EP. 10</span>
+                        </div>
+                        <span class="clip-tag">series / education</span>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="about">
+            <div class="wrap">
+                <div class="section-head">
+                    <h2>About</h2>
+                    <span class="tc mono">BIO / APPROACH</span>
+                </div>
+                <div class="about-grid">
+                    <div>
+                        <p class="about-lead">I turn raw footage into videos people actually want to watch.</p>
+                        <p>I'm a video editor focused on short-form content, lyric videos, and promotional edits. I use
+                            clean cuts, intentional pacing, captions, transitions, and visual elements to give every
+                            video a clear flow and polished finish.</p>
+                        <p>Whether it's a brand trying to grab attention or a song that needs visuals to match its mood,
+                            I focus on making the edit feel natural, engaging, and purposeful.</p>
+                        <p class="about-close">The goal? Make every second count.</p>
+                    </div>
+                    <div class="approach-list">
+                        <div class="approach-row"><span class="approach-label">Editing Style</span><span
+                                class="approach-value">Clean cuts / Smooth transitions / Strong pacing</span></div>
+                        <div class="approach-row"><span class="approach-label">Content</span><span
+                                class="approach-value">Short-form / Lyric videos / Promotional edits</span></div>
+                        <div class="approach-row"><span class="approach-label">Focus</span><span
+                                class="approach-value">Visual flow / Storytelling / Audience attention</span></div>
+                        <div class="approach-row"><span class="approach-label">Workflow</span><span
+                                class="approach-value">CapCut / Detail-focused / Client-driven</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="tools">
+            <div class="wrap">
+                <div class="section-head">
+                    <h2>Tools</h2>
+                    <span class="tc mono">KIT</span>
+                </div>
+                <div class="tools">
+                    <span class="tool">Premiere Pro</span>
+                    <span class="tool">DaVinci Resolve</span>
+                    <span class="tool">After Effects</span>
+                    <span class="tool">CapCut</span>
+                    <span class="tool">Photoshop</span>
+                    <span class="tool">Audition</span>
+                    <span class="tool">Frame.io</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="contact">
+            <div class="wrap">
+                <div class="contact">
+                    <h2>Got footage that<br>needs a cut?</h2>
+                    <div class="contact-action">
+                        <span class="contact-label">AVAILABLE FOR EDITING</span>
+                        <a class="contact-link" href="mailto:wuraolajohnson37@gmail.com"
+                            aria-label="Email Wuraola Johnson">
+                            <span class="contact-icon" aria-hidden="true">&#9993;</span>
+                            <strong>LET'S TALK</strong>
+                            <span class="contact-arrow" aria-hidden="true">&#8594;</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <span>&copy; 2026 Goldframe — Video Editor</span>
+        <span class="mono">FIN — 00:00</span>
+    </footer>
+
+</body>
+
+</html>
